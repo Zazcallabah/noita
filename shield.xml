@@ -1,0 +1,336 @@
+
+  <Entity
+    _version="1"
+    name=""
+    serialize="1"
+    tags="perk_entity,energy_shield" >
+
+    <_Transform
+      position.x="47.0577"
+      position.y="2962"
+      rotation="0"
+      scale.x="-1"
+      scale.y="1" >
+
+    </_Transform>
+
+    <AudioComponent
+      _enabled="1"
+      _tags="enabled_in_hand,item_identified"
+      audio_physics_material=""
+      event_root="player_projectiles/shield"
+      file="data/audio/Desktop/projectiles.bank"
+      play_only_if_visible="0"
+      remove_latest_event_on_destroyed="0"
+      send_message_on_event_dead="0"
+      set_latest_event_position="1" >
+
+    </AudioComponent>
+
+    <EnergyShieldComponent
+      _enabled="1"
+      _tags="enabled_in_hand,item_identified__LEGACY"
+      damage_multiplier="1.5"
+      energy="1"
+      energy_required_to_shield="0.2"
+      max_energy="1"
+      radius="10"
+      recharge_speed="0.22"
+      sector_degrees="360" >
+
+    </EnergyShieldComponent>
+
+    <HitboxComponent
+      _enabled="1"
+      _tags="enabled_in_world"
+      aabb_max_x="4"
+      aabb_max_y="3"
+      aabb_min_x="-4"
+      aabb_min_y="-3"
+      damage_multiplier="1"
+      is_enemy="1"
+      is_item="0"
+      is_player="0"
+      offset.x="0"
+      offset.y="0" >
+
+    </HitboxComponent>
+
+    <InheritTransformComponent
+      _enabled="1"
+      _tags="enabled_in_hand"
+      always_use_immediate_parent_rotation="0"
+      only_position="0"
+      parent_hotspot_tag=""
+      parent_sprite_id="-1"
+      rotate_based_on_x_scale="0"
+      use_root_parent="1" >
+
+      <Transform
+        position.x="0"
+        position.y="-4"
+        rotation="0"
+        scale.x="1"
+        scale.y="1" >
+
+      </Transform>
+
+    </InheritTransformComponent>
+
+    <LightComponent
+      _enabled="1"
+      _tags="enabled_in_hand,item_identified"
+      b="230"
+      blinking_freq="1"
+      fade_out_time="1.5"
+      g="190"
+      offset_x="0"
+      offset_y="0"
+      r="150"
+      radius="60"
+      update_properties="0" >
+
+    </LightComponent>
+
+    <ParticleEmitterComponent
+      _enabled="1"
+      _tags="character,enabled_in_hand,item_identified__LEGACY"
+      airflow_force="0.5"
+      airflow_scale="0.5"
+      airflow_time="0.1"
+      area_circle_radius.max="10"
+      area_circle_radius.min="0"
+      area_circle_sector_degrees="360"
+      attractor_force="0"
+      b2_force="0"
+      collide_with_gas_and_fire="1"
+      collide_with_grid="1"
+      color="0"
+      color_is_based_on_pos="0"
+      cosmetic_force_create="0"
+      count_max="4"
+      count_min="2"
+      create_real_particles="0"
+      custom_alpha="-1"
+      custom_style="NONE"
+      delay_frames="0"
+      direction_random_deg="0"
+      draw_as_long="0"
+      emission_chance="100"
+      emission_interval_max_frames="1"
+      emission_interval_min_frames="1"
+      emit_cosmetic_particles="1"
+      emit_only_if_there_is_space="0"
+      emit_real_particles="0"
+      emitted_material_name="plasma_fading"
+      emitter_lifetime_frames="-1"
+      fade_based_on_lifetime="1"
+      fire_cells_dont_ignite_damagemodel="0"
+      friction="0"
+      gravity.x="0"
+      gravity.y="0"
+      ignore_transform_updated_msg="0"
+      image_animation_colors_file=""
+      image_animation_emission_probability="1"
+      image_animation_file=""
+      image_animation_loop="1"
+      image_animation_phase="0"
+      image_animation_raytrace_from_center="0"
+      image_animation_speed="1"
+      image_animation_use_entity_rotation="0"
+      is_emitting="1"
+      is_trail="0"
+      lifetime_max="0.5"
+      lifetime_min="0.1"
+      offset.x="0"
+      offset.y="0"
+      particle_single_width="1"
+      render_back="1"
+      render_on_grid="1"
+      render_ultrabright="0"
+      set_magic_creation="0"
+      trail_gap="0"
+      use_material_inventory="0"
+      velocity_always_away_from_center="0"
+      x_pos_offset_max="0"
+      x_pos_offset_min="0"
+      x_vel_max="0"
+      x_vel_min="0"
+      y_pos_offset_max="0"
+      y_pos_offset_min="0"
+      y_vel_max="0"
+      y_vel_min="0" >
+
+    </ParticleEmitterComponent>
+
+    <ParticleEmitterComponent
+      _enabled="1"
+      _tags="character,enabled_in_hand,item_identified__LEGACY,shield_ring"
+      airflow_force="0.3"
+      airflow_scale="0.05"
+      airflow_time="0.01"
+      area_circle_radius.max="10"
+      area_circle_radius.min="10"
+      area_circle_sector_degrees="360"
+      attractor_force="0"
+      b2_force="0"
+      collide_with_gas_and_fire="1"
+      collide_with_grid="1"
+      color="0"
+      color_is_based_on_pos="0"
+      cosmetic_force_create="0"
+      count_max="100"
+      count_min="90"
+      create_real_particles="0"
+      custom_alpha="-1"
+      custom_style="NONE"
+      delay_frames="0"
+      direction_random_deg="0"
+      draw_as_long="0"
+      emission_chance="100"
+      emission_interval_max_frames="0"
+      emission_interval_min_frames="0"
+      emit_cosmetic_particles="1"
+      emit_only_if_there_is_space="0"
+      emit_real_particles="0"
+      emitted_material_name="plasma_fading"
+      emitter_lifetime_frames="-1"
+      fade_based_on_lifetime="1"
+      fire_cells_dont_ignite_damagemodel="0"
+      friction="0"
+      gravity.x="0"
+      gravity.y="0"
+      ignore_transform_updated_msg="0"
+      image_animation_colors_file=""
+      image_animation_emission_probability="1"
+      image_animation_file=""
+      image_animation_loop="1"
+      image_animation_phase="0"
+      image_animation_raytrace_from_center="0"
+      image_animation_speed="1"
+      image_animation_use_entity_rotation="0"
+      is_emitting="1"
+      is_trail="0"
+      lifetime_max="0.05"
+      lifetime_min="0.02"
+      offset.x="0"
+      offset.y="0"
+      particle_single_width="1"
+      render_back="1"
+      render_on_grid="1"
+      render_ultrabright="0"
+      set_magic_creation="0"
+      trail_gap="0"
+      use_material_inventory="0"
+      velocity_always_away_from_center="0"
+      x_pos_offset_max="0"
+      x_pos_offset_min="0"
+      x_vel_max="0"
+      x_vel_min="0"
+      y_pos_offset_max="0"
+      y_pos_offset_min="0"
+      y_vel_max="0"
+      y_vel_min="0" >
+
+    </ParticleEmitterComponent>
+
+    <ParticleEmitterComponent
+      _enabled="1"
+      _tags="character,enabled_in_hand,item_identified__LEGACY,shield_hit"
+      airflow_force="2.8"
+      airflow_scale="0.8"
+      airflow_time="0.03"
+      area_circle_radius.max="10"
+      area_circle_radius.min="10"
+      area_circle_sector_degrees="360"
+      attractor_force="0"
+      b2_force="0"
+      collide_with_gas_and_fire="1"
+      collide_with_grid="1"
+      color="0"
+      color_is_based_on_pos="0"
+      cosmetic_force_create="0"
+      count_max="360"
+      count_min="300"
+      create_real_particles="0"
+      custom_alpha="-1"
+      custom_style="NONE"
+      delay_frames="0"
+      direction_random_deg="0"
+      draw_as_long="0"
+      emission_chance="100"
+      emission_interval_max_frames="0"
+      emission_interval_min_frames="0"
+      emit_cosmetic_particles="1"
+      emit_only_if_there_is_space="0"
+      emit_real_particles="0"
+      emitted_material_name="plasma_fading"
+      emitter_lifetime_frames="-1"
+      fade_based_on_lifetime="1"
+      fire_cells_dont_ignite_damagemodel="0"
+      friction="0"
+      gravity.x="0"
+      gravity.y="0"
+      ignore_transform_updated_msg="0"
+      image_animation_colors_file=""
+      image_animation_emission_probability="1"
+      image_animation_file=""
+      image_animation_loop="1"
+      image_animation_phase="0"
+      image_animation_raytrace_from_center="0"
+      image_animation_speed="1"
+      image_animation_use_entity_rotation="0"
+      is_emitting="0"
+      is_trail="0"
+      lifetime_max="1"
+      lifetime_min="0.3"
+      offset.x="0"
+      offset.y="0"
+      particle_single_width="1"
+      render_back="1"
+      render_on_grid="1"
+      render_ultrabright="0"
+      set_magic_creation="0"
+      trail_gap="0"
+      use_material_inventory="0"
+      velocity_always_away_from_center="0"
+      x_pos_offset_max="0"
+      x_pos_offset_min="0"
+      x_vel_max="0"
+      x_vel_min="0"
+      y_pos_offset_max="0"
+      y_pos_offset_min="0"
+      y_vel_max="0"
+      y_vel_min="0" >
+
+    </ParticleEmitterComponent>
+
+  </Entity>
+
+  <Entity
+    _version="1"
+    name=""
+    serialize="1"
+    tags="perk_entity" >
+
+    <_Transform
+      position.x="0"
+      position.y="0"
+      rotation="0"
+      scale.x="1"
+      scale.y="1" >
+
+    </_Transform>
+
+    <UIIconComponent
+      _enabled="1"
+      description="$perkdesc_shield"
+      display_above_head="0"
+      display_in_hud="1"
+      icon_sprite_file="data/ui_gfx/perk_icons/shield.png"
+      is_perk="1"
+      name="$perk_shield" >
+
+    </UIIconComponent>
+
+  </Entity>
