@@ -146,14 +146,15 @@ function AddWorldFlag
 {
 	param($parent,$name)
 	$text = "`n`n        $name`n`n      "
-	$exists = $parent.Entity.WorldStateComponent.flags.string | ?{ $_ -eq $text }
+	$flags = $parent.Entity.WorldStateComponent.SelectSingleNode("flags")
+	$exists = $flags.string | ?{ $_ -eq $text }
 	if( $exists.length -gt 0 ){
 		write-verbose "world flag already exists"
 		return
 	}
 	$entity = $parent.CreateElement("string")
 	$entity.InnerText = $text
-	$parent.Entity.WorldStateComponent.flags.AppendChild($entity)
+	$flags.AppendChild($entity)
 	write-verbose "wrote world flag $name"
 }
 
