@@ -1,9 +1,49 @@
+<#
+.SYNOPSIS
+Patch your noita save file to make the game a bit easier
+
+.DESCRIPTION
+This script can give you more money, more health, and a bunch of perks making learning and exploring noita easier.
+Is easier more fun? You decide.
+
+EXAMPLES:
+
+./noita.ps1 -heal -boost -givePerks "enemyRadar,seeing,noBoom"
+    Doubles your health bar, heals yourself to the new maximm, and gives yourself the enemy radar, all-seeing eye, and explosion immunity perks.
+
+./noita.ps1 -boost -giveEdit
+    Doubles your health bar without any healing, and gives the tinker with wands everywhere perk.
+
+.PARAMETER boost
+Double your current health bar size. Using this once on a new save file will increase it to 200HP. Using it once more will increase it to 400HP and so on.
+This will not heal you on its own. Use the -heal parameter for that.
+
+.PARAMETER heal
+Reset your HP to your current maximum health. Using this and -boost at the same time will heal you up to your new maximum.
+
+.PARAMETER giveEdit
+Give yourself the 'Tinker with wands everywhere' perk.
+
+.PARAMETER giveRadar
+Give yourself the perks 'Item radar' and 'Wand radar'.
+
+.PARAMETER money
+Increase your current gold count by one order of magnitude. If you have exactly zero gold you instead end up with 1000 gold.
+
+.PARAMETER givePerks
+Give yourself any of the perks listed using the -list parameter. Separate multiple different perks using commas.
+
+.PARAMETER list
+List all perks that can be enabled using the -givePerks parameter. The 'Key' string listed is the value that should go in the comma separated list.
+
+.PARAMETER dryRun
+Test run this script without actually writing to your save file.
+#>
 param(
 	[switch]$boost,
 	[switch]$heal,
 	[switch]$giveEdit,
-	[switch]$giveItemRadar,
-	[switch]$giveSeeing,
+	[switch]$giveRadar,
 	[switch]$money,
 	$givePerks,
 	[switch]$list,
@@ -365,6 +405,7 @@ function AddPerk
 	if($perk.effect -ne $null){
 		$result = AddEffectNode $document $perk.effect
 	}
+	$world.Entity.WorldStateComponent.mods_have_been_active_during_this_run = "0"
 	$result = AddWorldFlag $world "PERK_PICKED_$label"
 	$result = IncrementWorldGlobal $world "PERK_PICKED_$($label)_PICKUP_COUNT" "1"
 	if($perk.luaScript -ne $null){
@@ -423,12 +464,9 @@ if($giveEdit){
 	AddPerk $extant_file_content $extant_world $perkData["editWands"]
 }
 
-if($giveItemRadar){
+if($giveRadar){
 	AddPerk $extant_file_content $extant_world $perkData["itemRadar"]
-}
-
-if($giveSeeing){
-	AddPerk $extant_file_content $extant_world $perkData["seeing"]
+	AddPerk $extant_file_content $extant_world $perkData["wandRadar"]
 }
 
 $give | %{
