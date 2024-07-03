@@ -2,7 +2,7 @@ param(
 	[switch]$boost,
 	[switch]$heal,
 	[switch]$giveEdit,
-# broken	[switch]$giveItemRadar,
+	[switch]$giveItemRadar,
 	[switch]$giveSeeing,
 	[switch]$money,
 	$givePerks,
@@ -19,7 +19,8 @@ function _perk_complex {
 		$label,
 		$worldGlobal,
 		$globalInit,
-		$stackLimit
+		$stackLimit,
+		$luaScript
 	)
 
 	new-object psobject -property @{
@@ -29,13 +30,14 @@ function _perk_complex {
 		icon=$icon;
 		effect=$effect;
 		worldGlobal=$worldGlobal;
-		globalInit=$globalInit
-		stackLimit=$stackLimit
+		globalInit=$globalInit;
+		stackLimit=$stackLimit;
+		luaScript=$luaScript;
 	}
 }
 
 function _perk {
-	param($name,$limit,[switch]$effect)
+	param($name,$limit,$luaScript,[switch]$effect)
 	$lc = $name.ToLower()
 	$desc = if($desc -ne $null){ $desc } else { $name }
 	$icon_ = if($icon -ne $null){ $icon } else { $name }
@@ -50,30 +52,31 @@ function _perk {
 		worldGlobal=$null;
 		globalInit=$null;
 		stackLimit=$limit_;
+		luaScript=$luaScript;
 	}
 }
 
 $perkData = @{
-# broken	"itemRadar"=(_perk "RADAR_ITEM");
-# broken	"enemyRadar"=(_perk "RADAR_ENEMY"); needs extra xml
-# broken	"vegetables"=(_perk "FOOD_CLOCK" -effect); not basic, probably needs script?
+	# broken	"vegetables"=(_perk "FOOD_CLOCK" -effect); not basic, probably needs script?
 
 	# these untested ones need checkup with actual perk diff
 	"untestedGreed"=(_perk "EXTRA_MONEY" -limit 128);
-	"untestedTrickGreed"=(_perk "EXTRA_MONEY_TRICK_KILL" -limit 128);
+	"untestedTrickGreed"=(_perk "EXTRA_MONEY_TRICK_KILL" -limit 128); # probably also trick_kill_gold_multiplier="2" doubled?
 
 	"untestedCrit"=(_perk "CRITICAL_HIT" -limit 128);
 	"untestedPerkLottery"=(_perk "PERKS_LOTTERY" -limit 6);
 	"untestedConcentratedSpells"=(_perk "LOWER_SPREAD" -limit 128);
 	"untestedMoreLove"=(_perk "GENOME_MORE_LOVE" -limit 128);
 	"untestedLivingEdge"=(_perk "LOW_HP_DAMAGE_BOOST" -effect);
-	"untestedUnlimitedSpells"=(_perk "UNLIMITED_SPELLS" -effect);
+	"untestedUnlimitedSpells"=(_perk "UNLIMITED_SPELLS" -effect); # probably perk_infinite_spells="0"
 
-
-
+	"wandRadar"=(_perk -name "RADAR_WAND" -luaScript "radar_wand.lua");
+	"itemRadar"=(_perk -name "RADAR_ITEM" -luaScript "radar_item.lua");
+	"enemyRadar"=(_perk -name "RADAR_ENEMY" -luaScript "radar.lua");
 	"editWands"=(_perk "EDIT_WANDS_EVERYWHERE" -effect);
 	"ironStomach"=(_perk "IRON_STOMACH" -effect);
 
+	# these should have _tags effect_protection
 	"noMelee"=(_perk "PROTECTION_MELEE" -effect);
 	"noSpark"=(_perk "PROTECTION_ELECTRICITY" -effect);
 	"noFire"=(_perk "PROTECTION_FIRE" -effect);
@@ -89,8 +92,8 @@ $perkData = @{
 # SHIELD stacks 5 -seems complex adds extra xml (permanent shield)
 # PROJECTILE_REPULSION stacks 128 probably needs extra xml (projectile repulsion field)
 # PROJECTILE_HOMING (homing shots)
-# GOLD_IS_FOREVER
-# TRICK_BLOOD_MONEY (blood money)
+# GOLD_IS_FOREVER probably also  perk_gold_is_forever="0"
+# TRICK_BLOOD_MONEY (blood money) (no effect, set   world component perk_trick_kills_blood_money="0"
 
 
 
@@ -156,6 +159,57 @@ function AddWorldFlag
 	$entity.InnerText = $text
 	$flags.AppendChild($entity)
 	write-verbose "wrote world flag $name"
+}
+
+function AddLuaNode
+{
+	param($parent,$script)
+
+	$entity = $parent.CreateElement("LuaComponent")
+	$entity.SetAttribute("_enabled","1")
+	$entity.SetAttribute("_tags","perk_component")
+	$entity.SetAttribute("call_init_function","0")
+	$entity.SetAttribute("enable_coroutines","0")
+	$entity.SetAttribute("execute_every_n_frame","1")
+	$entity.SetAttribute("execute_on_added","0")
+	$entity.SetAttribute("execute_on_removed","0")
+	$entity.SetAttribute("execute_times","0")
+	$entity.SetAttribute("limit_all_callbacks","0")
+	$entity.SetAttribute("limit_how_many_times_per_frame","-1")
+	$entity.SetAttribute("limit_to_every_n_frame","-1")
+	$entity.SetAttribute("mLastExecutionFrame","-1")
+	$entity.SetAttribute("mModAppendsDone","1")
+	$entity.SetAttribute("mTimesExecutedThisFrame","1")
+	$entity.SetAttribute("remove_after_executed","0")
+	$entity.SetAttribute("script_audio_event_dead","")
+	$entity.SetAttribute("script_biome_entered","")
+	$entity.SetAttribute("script_collision_trigger_hit","")
+	$entity.SetAttribute("script_collision_trigger_timer_finished","")
+	$entity.SetAttribute("script_damage_about_to_be_received","")
+	$entity.SetAttribute("script_damage_received","")
+	$entity.SetAttribute("script_death","")
+	$entity.SetAttribute("script_electricity_receiver_electrified","")
+	$entity.SetAttribute("script_electricity_receiver_switched","")
+	$entity.SetAttribute("script_enabled_changed","")
+	$entity.SetAttribute("script_inhaled_material","")
+	$entity.SetAttribute("script_interacting","")
+	$entity.SetAttribute("script_item_picked_up","")
+	$entity.SetAttribute("script_kick","")
+	$entity.SetAttribute("script_material_area_checker_failed","")
+	$entity.SetAttribute("script_material_area_checker_success","")
+	$entity.SetAttribute("script_physics_body_modified","")
+	$entity.SetAttribute("script_polymorphing_to","")
+	$entity.SetAttribute("script_portal_teleport_used","")
+	$entity.SetAttribute("script_pressure_plate_change","")
+	$entity.SetAttribute("script_shot","")
+	$entity.SetAttribute("script_source_file","data/scripts/perks/$($script)")
+	$entity.SetAttribute("script_teleported","")
+	$entity.SetAttribute("script_throw_item","")
+	$entity.SetAttribute("script_wand_fired","")
+	$entity.SetAttribute("vm_type","SHARED_BY_MANY_COMPONENTS")
+	$entity.InnerText ="`n"
+	$parent.Entity.AppendChild($entity)
+	write-verbose "wrote lua script tag $script"
 }
 
 function AddPerkNode
@@ -297,10 +351,10 @@ function AddPerk
 	$label = $perk.label
 
 	$extant = $document.Entity.Entity | ?{
-			$_.tags -eq "perk_entity"
-		} | ?{
-			$_.UIIconComponent.name -eq $perk.name
-		} | measure | select -expandproperty count
+		$_.tags -eq "perk_entity"
+	} | ?{
+		$_.UIIconComponent.name -eq $perk.name
+	} | measure | select -expandproperty count
 	write-verbose "perk stack limit: $($perk.stackLimit) comparing to $extant"
 	if($extant -ge $perk.stackLimit){
 		write-host "$($label) already patched"
@@ -313,6 +367,9 @@ function AddPerk
 	}
 	$result = AddWorldFlag $world "PERK_PICKED_$label"
 	$result = IncrementWorldGlobal $world "PERK_PICKED_$($label)_PICKUP_COUNT" "1"
+	if($perk.luaScript -ne $null){
+		$result = AddLuaNode $document $perk.luaScript
+	}
 	if($perk.worldGlobal -ne $null){
 		if($perk.globalInit -ne $null){
 			$result = IncrementWorldGlobal $world $perk.worldGlobal $perk.globalInit
@@ -353,7 +410,7 @@ if($heal){
 if($money){
 	[int]$current_money = $extant_file_content.Entity.InventoryGuiComponent.wallet_money_target
 	if($current_money -le 0){
-		$current_money = 1000;
+		$current_money = 100;
 	}
 	$new_money = $current_money * 10
 	$extant_file_content.Entity.InventoryGuiComponent.wallet_money_target = $new_money
@@ -366,9 +423,9 @@ if($giveEdit){
 	AddPerk $extant_file_content $extant_world $perkData["editWands"]
 }
 
-# if($giveItemRadar){
-# 	AddPerk $extant_file_content $extant_world $perkData["itemRadar"]
-# }
+if($giveItemRadar){
+	AddPerk $extant_file_content $extant_world $perkData["itemRadar"]
+}
 
 if($giveSeeing){
 	AddPerk $extant_file_content $extant_world $perkData["seeing"]
