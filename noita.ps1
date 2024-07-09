@@ -405,7 +405,6 @@ function AddPerk
 	if($perk.effect -ne $null){
 		$result = AddEffectNode $document $perk.effect
 	}
-	$world.Entity.WorldStateComponent.mods_have_been_active_during_this_run = "0"
 	$result = AddWorldFlag $world "PERK_PICKED_$label"
 	$result = IncrementWorldGlobal $world "PERK_PICKED_$($label)_PICKUP_COUNT" "1"
 	if($perk.luaScript -ne $null){
@@ -438,26 +437,30 @@ if($extant_file_content.Entity.DamageModelComponent.max_hp -eq $null -or $extant
 }
 if($boost){
 	$maxhp = [int]$extant_file_content.Entity.DamageModelComponent.max_hp
-	if($maxhp -gt 2147483648){
+	if($maxhp -gt 150){
 		write-warning "hp reaching high levels"
 	}
-	$extant_file_content.Entity.DamageModelComponent.max_hp = $maxhp * 2
-	write-host "boosted"
+	$newhp = $maxhp * 2
+	$extant_file_content.Entity.DamageModelComponent.max_hp = $newhp
+	write-host "boosted ($($newhp*25)hp)"
 }
 if($heal){
-	$extant_file_content.Entity.DamageModelComponent.hp = $extant_file_content.Entity.DamageModelComponent.max_hp
-	write-host "healed"
+	$newhp = $extant_file_content.Entity.DamageModelComponent.max_hp
+	$extant_file_content.Entity.DamageModelComponent.hp = $newhp
+	write-host "healed ($([int]$newhp*25)hp)"
 }
 if($money){
 	[int]$current_money = $extant_file_content.Entity.InventoryGuiComponent.wallet_money_target
 	if($current_money -le 0){
 		$current_money = 100;
+	} elseif($current_money -gt 100000) {
+		write-warning "money reaching high levels"
 	}
 	$new_money = $current_money * 10
 	$extant_file_content.Entity.InventoryGuiComponent.wallet_money_target = $new_money
 	$extant_file_content.Entity.WalletComponent.money = $new_money
 	$extant_file_content.Entity.WalletComponent.mMoneyPrevFrame = $new_money
-	write-host "scrooged"
+	write-host "scrooged ($($new_money)g)"
 }
 
 if($giveEdit){
@@ -476,6 +479,7 @@ $give | %{
 }
 
 if( !$dryrun ){
+	$extant_world.Entity.WorldStateComponent.mods_have_been_active_during_this_run = "0"
 	SaveToFile $extant_file_content $path
 	SaveToFile $extant_world $pathWorld
 	write-host "saved"
